@@ -196,8 +196,18 @@ function App() {
               />
             </div>
           </div>
-          <div className="subContainer" style={{ maxWidth: "200px" }}>
-            <input type="submit" value="Add Wip" />
+          <div
+            className="subContainer"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <input
+              type="submit"
+              value="Add Wip"
+              style={{ maxWidth: "200px" }}
+            />
           </div>
         </div>
       </form>
