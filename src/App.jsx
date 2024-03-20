@@ -28,17 +28,25 @@ function App() {
   const getMOs = async () => {
     const mos = await getManufacturingOrders();
     const statuses = await getMoStatuses();
-    const filteredMos = mos.data.filter((mo) => {
-      const s = statuses.data.filter((m) => m.mohId !== mo.mohId);
-      if (s.length > 0) {
+
+    const mappedMos = mos.data.map((mo) => {
+      const s = statuses.data.filter((m) => {
+        return m.mohId === mo.mohId;
+      });
+
+      if (s.length === 0) {
+        // console.log(mo);
         return mo;
       }
     });
+    const filteredMos = mappedMos.filter((mo) => mo !== undefined);
+    console.log(filteredMos);
+
     setManufacturingOrders(filteredMos);
-    mos.data.map((mo) => {
-      optionsMo.push({ value: mo.mohId, label: mo.mohId });
-    });
-    setOptions(optionsMo);
+    // mos.data.map((mo) => {
+    //   optionsMo.push({ value: mo.mohId, label: mo.mohId });
+    // });
+    // setOptions(optionsMo);
   };
 
   useEffect(() => {
