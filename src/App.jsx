@@ -10,19 +10,15 @@ import { createMoStatus } from "./api/mo/createMoStatus";
 import { getMoStatuses } from "./api/mo/getMoStatuses";
 
 function App() {
-  let optionsMo = [];
   let sortedItems = items.sort((a, b) => a["itemId"] - b["itemId"]);
   const [manufacturingOrders, setManufacturingOrders] = useState([]);
-  const [options, setOptions] = useState([]);
   const [selectedMo, setSelectedMo] = useState(
     localStorage.getItem("moNumber") ? localStorage.getItem("moNumber") : ""
   );
   const [selectedItem, setSelectedItem] = useState("");
   const [wipQty, setWipQty] = useState();
   const [user, setUser] = useState(
-    localStorage.getItem("name")
-      ? localStorage.getItem("name")
-      : "Enter your Name"
+    localStorage.getItem("name") ? localStorage.getItem("name") : "Enter Name"
   );
 
   const getMOs = async () => {
