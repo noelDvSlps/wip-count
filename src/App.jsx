@@ -196,7 +196,7 @@ function App() {
               />
             </div>
           </div>
-          <div className="subContainer">
+          <div className="subContainer" style={{ maxWidth: "200px" }}>
             <input type="submit" value="Add Wip" />
           </div>
         </div>
