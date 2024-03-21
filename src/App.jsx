@@ -146,7 +146,10 @@ function App() {
                 type="text"
                 style={{ width: "200px" }}
                 onChange={(e) => {
-                  localStorage.setItem("name", e.target.value);
+                  localStorage.setItem(
+                    "name",
+                    e.target.value.trim().toUpperCase()
+                  );
                   setUser(e.target.value);
                 }}
               />
@@ -244,8 +247,15 @@ function App() {
         </div>
       </form>
       <form onSubmit={handleSubmitDone}>
-        <div className="subContainer" style={{ marginTop: "60px" }}>
-          <div className="subContainer">
+        <div
+          className="subContainer"
+          style={{
+            marginTop: "60px",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div style={{ width: "200px" }}>
             <input type="submit" value={`Done with MO ${selectedMo}`} />
           </div>
         </div>
