@@ -186,8 +186,11 @@ function App() {
                 }}
                 separator={true}
                 onChange={(values) => {
-                  localStorage.setItem("moNumber", values[0].mohId);
-                  setSelectedMo(values[0].mohId);
+                  localStorage.setItem(
+                    "moNumber",
+                    values[0] ? values[0].mohId : ""
+                  );
+                  setSelectedMo(values[0] ? values[0].mohId : "");
                   // console.log(values[0]);
                 }}
               />
