@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { createInventoryWip } from "./api/wip/createInventoryWip";
 import { createMoStatus } from "./api/mo/createMoStatus";
 import { getMoStatuses } from "./api/mo/getMoStatuses";
+import { getInventoryWips } from "./api/wip/getInventoryWips";
 
 function App() {
   let sortedItems = items.sort((a, b) => a["itemId"] - b["itemId"]);
@@ -17,6 +18,7 @@ function App() {
   );
   const [selectedItem, setSelectedItem] = useState("");
   const [wipQty, setWipQty] = useState();
+  const [inventoryWips, setInventoryWips] = useState([]);
   const [user, setUser] = useState(
     localStorage.getItem("name") ? localStorage.getItem("name") : "Enter Name"
   );
@@ -45,8 +47,17 @@ function App() {
     // setOptions(optionsMo);
   };
 
+  const getWips = async () => {
+    const wips = await getInventoryWips();
+    setInventoryWips(wips);
+  };
+
   useEffect(() => {
     getMOs();
+  }, []);
+
+  useEffect(() => {
+    getWips();
   }, []);
 
   const handleSubmit = async (event) => {
@@ -63,6 +74,14 @@ function App() {
       return;
     }
     event.preventDefault();
+    const checkDupes = inventoryWips.filter(
+      (wip) => wip.mohId === selectedMo && wip.item === selectedItem
+    );
+    const dupes = checkDupes.length > 0 ? true : false;
+    if (dupes) {
+      alert(dupes);
+      return;
+    }
     await createInventoryWip({
       mohId: selectedMo,
       item: selectedItem,
