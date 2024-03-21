@@ -9,6 +9,7 @@ import { createInventoryWip } from "./api/wip/createInventoryWip";
 import { createMoStatus } from "./api/mo/createMoStatus";
 import { getMoStatuses } from "./api/mo/getMoStatuses";
 import { getInventoryWips } from "./api/wip/getInventoryWips";
+import { updateWip } from "./api/wip/updateWip";
 
 function App() {
   let sortedItems = items.sort((a, b) => a["itemId"] - b["itemId"]);
@@ -20,7 +21,7 @@ function App() {
   const [wipQty, setWipQty] = useState();
   const [inventoryWips, setInventoryWips] = useState([]);
   const [user, setUser] = useState(
-    localStorage.getItem("name") ? localStorage.getItem("name") : "Enter Name"
+    localStorage.getItem("name") ? localStorage.getItem("name") : ""
   );
 
   const getMOs = async () => {
@@ -38,18 +39,13 @@ function App() {
       }
     });
     const filteredMos = mappedMos.filter((mo) => mo !== undefined);
-    console.log(filteredMos);
 
     setManufacturingOrders(filteredMos);
-    // mos.data.map((mo) => {
-    //   optionsMo.push({ value: mo.mohId, label: mo.mohId });
-    // });
-    // setOptions(optionsMo);
   };
 
   const getWips = async () => {
     const wips = await getInventoryWips();
-    setInventoryWips(wips);
+    setInventoryWips(wips.data);
   };
 
   useEffect(() => {
@@ -73,22 +69,37 @@ function App() {
       alert("Enter Wip qty");
       return;
     }
+
     event.preventDefault();
+
     const checkDupes = inventoryWips.filter(
       (wip) => wip.mohId === selectedMo && wip.item === selectedItem
     );
+
     const dupes = checkDupes.length > 0 ? true : false;
-    if (dupes) {
-      alert(dupes);
-      return;
+
+    if (dupes === true) {
+      const id = checkDupes[0]._id;
+      await updateWip(
+        id,
+        {
+          mohId: selectedMo,
+          item: selectedItem,
+          wipQty,
+          user,
+          lastUpdate: Date.now(),
+        },
+        "noToken"
+      );
+    } else {
+      await createInventoryWip({
+        mohId: selectedMo,
+        item: selectedItem,
+        wipQty,
+        user,
+        lastUpdate: Date.now(),
+      });
     }
-    await createInventoryWip({
-      mohId: selectedMo,
-      item: selectedItem,
-      wipQty,
-      user,
-      lastUpdate: Date.now(),
-    });
 
     window.location.reload();
   };
@@ -130,9 +141,10 @@ function App() {
             </div>
             <div className="subContainer2 flexLeft">
               <input
+                placeholder="Enter Name"
                 value={user}
                 type="text"
-                style={{ width: "150px" }}
+                style={{ width: "200px" }}
                 onChange={(e) => {
                   localStorage.setItem("name", e.target.value);
                   setUser(e.target.value);
@@ -210,6 +222,7 @@ function App() {
               <input
                 type="number"
                 style={{ width: "200px" }}
+                step="0.001"
                 onChange={(e) => setWipQty(e.target.value)}
                 value={wipQty}
               />
