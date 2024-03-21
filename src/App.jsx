@@ -214,7 +214,7 @@ function App() {
                 style={{ width: "200px" }}
                 separator={true}
                 onChange={(values) => {
-                  setSelectedItem(values[0].itemId);
+                  setSelectedItem(values[0] ? values[0].itemId : "");
                   // console.log(values[0]);
                 }}
               />
@@ -249,20 +249,22 @@ function App() {
           </div>
         </div>
       </form>
-      <form onSubmit={handleSubmitDone}>
-        <div
-          className="subContainer"
-          style={{
-            marginTop: "60px",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <div style={{ width: "200px" }}>
-            <input type="submit" value={`Done with MO ${selectedMo}`} />
+      {selectedMo !== "" && (
+        <form onSubmit={handleSubmitDone}>
+          <div
+            className="subContainer"
+            style={{
+              marginTop: "60px",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <div style={{ width: "200px" }}>
+              <input type="submit" value={`Done with MO ${selectedMo}`} />
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      )}
     </div>
   );
 }
