@@ -4,6 +4,7 @@ import { getManufacturingOrders } from "./api/manufacturingOrders/getManufacturi
 
 import "./App.css";
 import items from "../items.json";
+import itemsAxs from "../itemsAxs.json";
 import { useEffect } from "react";
 import { createInventoryWip } from "./api/wip/createInventoryWip";
 import { createMoStatus } from "./api/mo/createMoStatus";
@@ -12,7 +13,17 @@ import { getInventoryWips } from "./api/wip/getInventoryWips";
 import { updateWip } from "./api/wip/updateWip";
 
 function App() {
-  let sortedItems = items.sort((a, b) => a["itemId"] - b["itemId"]);
+  const newArr = itemsAxs.map((itemAxs) => {
+    const f = items.filter((item) => {
+      return item.itemId === itemAxs.itemId;
+    });
+    if (f.length > 0) {
+      return f[0];
+    } else {
+      return itemAxs;
+    }
+  });
+  let sortedItems = newArr.sort((a, b) => a["itemId"] - b["itemId"]);
   const [manufacturingOrders, setManufacturingOrders] = useState([]);
   const [selectedMo, setSelectedMo] = useState(
     localStorage.getItem("moNumber") ? localStorage.getItem("moNumber") : ""
