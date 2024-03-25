@@ -13,16 +13,21 @@ import { getInventoryWips } from "./api/wip/getInventoryWips";
 import { updateWip } from "./api/wip/updateWip";
 
 function App() {
-  const newArr = itemsAxs.map((itemAxs) => {
+  let newArr = [];
+  itemsAxs.map((itemAxs) => {
+    // console.log(itemAxs);
     const f = items.filter((item) => {
       return item.itemId === itemAxs.itemId;
     });
-    if (f.length > 0) {
-      return f[0];
-    } else {
+    if (f.length === 0) {
+      newArr.push(itemAxs);
       return itemAxs;
     }
   });
+
+  items.map((item) => newArr.push(item));
+
+  // console.log(newArr);
   let sortedItems = newArr.sort((a, b) => a["itemId"] - b["itemId"]);
   const [manufacturingOrders, setManufacturingOrders] = useState([]);
   const [selectedMo, setSelectedMo] = useState(
