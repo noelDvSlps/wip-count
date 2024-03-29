@@ -73,20 +73,24 @@ function App() {
   }, []);
 
   const handleSubmit = async (event) => {
-    if (selectedItem === "") {
-      alert("Select Item");
+    event.preventDefault();
+    if (user === "") {
+      alert("Enter Name");
       return;
     }
     if (selectedMo === "") {
       alert("Select Mo#");
       return;
     }
-    if (wipQty === undefined) {
-      alert("Enter Wip qty");
+    if (selectedItem === "") {
+      alert("Select Item");
       return;
     }
 
-    event.preventDefault();
+    if (wipQty === undefined || wipQty === "") {
+      alert("Enter Wip qty");
+      return;
+    }
 
     const checkDupes = inventoryWips.filter(
       (wip) => wip.mohId === selectedMo && wip.item === selectedItem
@@ -144,7 +148,12 @@ function App() {
   const getIndex = (array, keyName, keyvalue) => {
     const i = array.findIndex((mo) => mo[keyName] === keyvalue);
     // alert(i);
-    return i;
+    if (i === -1) {
+      localStorage.removeItem("moNumber");
+      window.location.reload();
+    } else {
+      return i;
+    }
   };
 
   return (
@@ -214,7 +223,7 @@ function App() {
           </div>
           <div className="subContainer">
             <div className="subContainer2 flexRight">
-              <div>ITEM</div>
+              <div>SUB ITEM</div>
             </div>
             <div className="subContainer2 flexLeft">
               <Select
