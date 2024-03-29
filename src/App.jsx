@@ -239,7 +239,8 @@ function App() {
             </div>
             <div className="subContainer2 flexLeft" id="selectMo">
               <Select
-                type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 options={manufacturingOrders}
                 labelField="mohId"
                 valueField="mohId"
