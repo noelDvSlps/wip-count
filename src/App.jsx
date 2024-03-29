@@ -306,6 +306,8 @@ function App() {
             <div className="subContainer2 flexLeft">
               <input
                 type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 style={{ width: "200px" }}
                 step="0.001"
                 onChange={(e) => setWipQty(e.target.value)}
