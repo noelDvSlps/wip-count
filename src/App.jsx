@@ -12,7 +12,7 @@ import { getMoStatuses } from "./api/mo/getMoStatuses";
 import { getInventoryWips } from "./api/wip/getInventoryWips";
 import { updateWip } from "./api/wip/updateWip";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Button } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 
 function App() {
   let newArr = [];
@@ -77,15 +77,15 @@ function App() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (user === "") {
-      alert("Enter Name");
+      handleShow("Enter Name");
       return;
     }
     if (selectedMo === "") {
-      alert("Select Mo#");
+      handleShow("Select Mo#");
       return;
     }
     if (selectedItem === "") {
-      alert("Select Item");
+      handleShow("Select Item");
       return;
     }
 
@@ -127,24 +127,28 @@ function App() {
   };
 
   const addFinishedMo = async () => {
-    let text = "Are you sure?\nEither OK or Cancel.";
-    if (confirm(text) == true) {
-      await createMoStatus({
-        mohId: selectedMo,
-        status: true,
-        user,
-        lastUpdate: Date.now(),
-      });
-      localStorage.removeItem("moNumber");
-      window.location.reload();
-    } else {
-      alert("You canceled!");
-    }
+    // let text = "Are you sure?\nEither OK or Cancel.";
+    // if (confirm(text) == true) {
+    await createMoStatus({
+      mohId: selectedMo,
+      status: true,
+      user,
+      lastUpdate: Date.now(),
+    });
+    localStorage.removeItem("moNumber");
+    window.location.reload();
+
+    // } else {
+    //   alert("You canceled!");
+    // }
   };
 
   const handleSubmitDone = async (event) => {
     event.preventDefault();
-    addFinishedMo();
+    handleShowDone(
+      `Are you sure you are done with MO# ${localStorage.getItem("moNumber")}?`
+    );
+    // addFinishedMo();
   };
 
   const getIndex = (array, keyName, keyvalue) => {
@@ -158,8 +162,54 @@ function App() {
     }
   };
 
+  const [show, setShow] = useState(false);
+  const [msg, setMsg] = useState("");
+
+  const handleClose = () => setShow(false);
+  const handleShow = (message) => {
+    setMsg(message);
+    setShow(true);
+  };
+
+  const [showDone, setShowDone] = useState(false);
+  const [msgDone, setMsgDone] = useState("");
+
+  const handleCloseDone = () => setShowDone(false);
+  const handleShowDone = (message) => {
+    setMsgDone(message);
+    setShowDone(true);
+  };
+
   return (
     <div>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Message</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{msg}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          {/* <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button> */}
+        </Modal.Footer>
+      </Modal>
+      <Modal show={showDone} onHide={handleCloseDone}>
+        <Modal.Header closeButton>
+          <Modal.Title>Message</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{msgDone}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseDone}>
+            No
+          </Button>
+          <Button variant="primary" onClick={addFinishedMo}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <form onSubmit={handleSubmit}>
         <div className="container">
           <div className="subContainer" style={{ marginBottom: "60px" }}>
@@ -268,13 +318,8 @@ function App() {
               justifyContent: "center",
             }}
           >
-            {/* <input
-              type="submit"
-              value="Add Wip"
-              style={{ maxWidth: "200px" }}
-            /> */}
             <Button variant="primary" onClick={handleSubmit}>
-              Primary
+              Add Wip
             </Button>
           </div>
         </div>
@@ -294,7 +339,6 @@ function App() {
                 variant="success"
                 onClick={handleSubmitDone}
               >{`Done with MO ${selectedMo}`}</Button>
-              {/* <input type="submit" value={`Done with MO ${selectedMo}`} /> */}
             </div>
           </div>
         </form>
