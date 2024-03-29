@@ -11,6 +11,8 @@ import { createMoStatus } from "./api/mo/createMoStatus";
 import { getMoStatuses } from "./api/mo/getMoStatuses";
 import { getInventoryWips } from "./api/wip/getInventoryWips";
 import { updateWip } from "./api/wip/updateWip";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Button } from "react-bootstrap";
 
 function App() {
   let newArr = [];
@@ -266,11 +268,14 @@ function App() {
               justifyContent: "center",
             }}
           >
-            <input
+            {/* <input
               type="submit"
               value="Add Wip"
               style={{ maxWidth: "200px" }}
-            />
+            /> */}
+            <Button variant="primary" onClick={handleSubmit}>
+              Primary
+            </Button>
           </div>
         </div>
       </form>
@@ -284,8 +289,12 @@ function App() {
               justifyContent: "center",
             }}
           >
-            <div style={{ width: "200px" }}>
-              <input type="submit" value={`Done with MO ${selectedMo}`} />
+            <div style={{ width: "100%" }}>
+              <Button
+                variant="success"
+                onClick={handleSubmitDone}
+              >{`Done with MO ${selectedMo}`}</Button>
+              {/* <input type="submit" value={`Done with MO ${selectedMo}`} /> */}
             </div>
           </div>
         </form>
