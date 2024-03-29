@@ -12,7 +12,7 @@ import { getMoStatuses } from "./api/mo/getMoStatuses";
 import { getInventoryWips } from "./api/wip/getInventoryWips";
 import { updateWip } from "./api/wip/updateWip";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, Spinner } from "react-bootstrap";
 
 function App() {
   let newArr = [];
@@ -35,6 +35,8 @@ function App() {
   const [selectedMo, setSelectedMo] = useState(
     localStorage.getItem("moNumber") ? localStorage.getItem("moNumber") : ""
   );
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [selectedItem, setSelectedItem] = useState("");
   const [wipQty, setWipQty] = useState();
   const [inventoryWips, setInventoryWips] = useState([]);
@@ -76,21 +78,24 @@ function App() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
     if (user === "") {
       handleShow("Enter Name");
       return;
     }
     if (selectedMo === "") {
       handleShow("Select Mo#");
+
       return;
     }
     if (selectedItem === "") {
-      handleShow("Select Item");
+      handleShow("Select Sub Item");
+
       return;
     }
 
     if (wipQty === undefined || wipQty === "") {
-      alert("Enter Wip qty");
+      handleShow("Enter Wip qty");
       return;
     }
 
@@ -122,11 +127,13 @@ function App() {
         lastUpdate: Date.now(),
       });
     }
+    setLoading(false);
 
     window.location.reload();
   };
 
   const addFinishedMo = async () => {
+    setSaving(true);
     // let text = "Are you sure?\nEither OK or Cancel.";
     // if (confirm(text) == true) {
     await createMoStatus({
@@ -136,8 +143,9 @@ function App() {
       lastUpdate: Date.now(),
     });
     localStorage.removeItem("moNumber");
-    window.location.reload();
 
+    window.location.reload();
+    // setSaving(false);
     // } else {
     //   alert("You canceled!");
     // }
@@ -169,6 +177,7 @@ function App() {
   const handleShow = (message) => {
     setMsg(message);
     setShow(true);
+    setLoading(false);
   };
 
   const [showDone, setShowDone] = useState(false);
@@ -182,6 +191,7 @@ function App() {
 
   return (
     <div>
+      <div style={{ textAlign: "center", padding: "30px" }}>WIP COUNTER</div>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Message</Modal.Title>
@@ -206,7 +216,7 @@ function App() {
             No
           </Button>
           <Button variant="primary" onClick={addFinishedMo}>
-            Yes
+            {saving ? <Spinner animation="border" /> : "Yes"}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -239,8 +249,7 @@ function App() {
             </div>
             <div className="subContainer2 flexLeft" id="selectMo">
               <Select
-                inputMode="numeric"
-                pattern="[0-9]*"
+                inputProps={{ readOnly: true }}
                 options={manufacturingOrders}
                 labelField="mohId"
                 valueField="mohId"
@@ -289,7 +298,7 @@ function App() {
                     ? []
                     : [{ value: selectedItem, label: selectedItem }]
                 }
-                placeholder="Select item number"
+                placeholder="Select sub item "
                 style={{ width: "200px" }}
                 separator={true}
                 onChange={(values) => {
@@ -323,7 +332,7 @@ function App() {
             }}
           >
             <Button variant="primary" onClick={handleSubmit}>
-              Add Wip
+              {loading ? <Spinner animation="grow" /> : "Add Wip"}
             </Button>
           </div>
         </div>
