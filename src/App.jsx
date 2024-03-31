@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Select from "react-dropdown-select";
 import { getManufacturingOrders } from "./api/manufacturingOrders/getManufacturingOrders";
 
@@ -43,6 +43,7 @@ function App() {
   const [user, setUser] = useState(
     localStorage.getItem("name") ? localStorage.getItem("name") : ""
   );
+  const paraRef = useRef(null);
 
   const getMOs = async () => {
     const mos = await getManufacturingOrders();
@@ -74,6 +75,7 @@ function App() {
 
   useEffect(() => {
     getWips();
+    paraRef.current.scrollIntoView();
   }, []);
 
   const handleSubmit = async (event) => {
@@ -337,6 +339,7 @@ function App() {
           </div>
         </div>
       </form>
+
       {selectedMo !== "" && (
         <form onSubmit={handleSubmitDone}>
           <div
@@ -356,6 +359,7 @@ function App() {
           </div>
         </form>
       )}
+      <p ref={paraRef}></p>
     </div>
   );
 }
