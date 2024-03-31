@@ -60,8 +60,9 @@ function App() {
       }
     });
     const filteredMos = mappedMos.filter((mo) => mo !== undefined);
+    const sortedMos = filteredMos.sort((a, b) => a["mohId"] - b["mohId"]);
 
-    setManufacturingOrders(filteredMos);
+    setManufacturingOrders(sortedMos);
   };
 
   const getWips = async () => {
