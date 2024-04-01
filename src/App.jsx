@@ -82,6 +82,10 @@ function App() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
+    if (!localStorage.getItem("inventoryLocation")) {
+      handleShow("Enter Location");
+      return;
+    }
     if (user === "") {
       handleShow("Enter Name");
       return;
@@ -113,6 +117,7 @@ function App() {
       await updateWip(
         id,
         {
+          location: localStorage.getItem("inventoryLocation"),
           mohId: selectedMo,
           item: selectedItem,
           wipQty,
@@ -123,6 +128,7 @@ function App() {
       );
     } else {
       await createInventoryWip({
+        location: localStorage.getItem("inventoryLocation"),
         mohId: selectedMo,
         item: selectedItem,
         wipQty,
@@ -140,6 +146,7 @@ function App() {
     // let text = "Are you sure?\nEither OK or Cancel.";
     // if (confirm(text) == true) {
     await createMoStatus({
+      location: localStorage.getItem("inventoryLocation"),
       mohId: selectedMo,
       status: true,
       user,
@@ -225,10 +232,43 @@ function App() {
       </Modal>
       <form onSubmit={handleSubmit}>
         <div className="container">
-          <div className="subContainer" style={{ marginBottom: "60px" }}>
+          <div className="subContainer" style={{ marginBottom: "10px" }}>
+            <div className="subContainer2 flexRight">
+              <div>Location</div>
+            </div>
+            <div className="subContainer2 flexLeft">
+              <Select
+                options={[
+                  { value: "CA", label: "CA" },
+                  { value: "TX", label: "TX" },
+                ]}
+                values={
+                  localStorage.getItem("inventoryLocation")
+                    ? [
+                        {
+                          value: localStorage.getItem("inventoryLocation"),
+                          label: localStorage.getItem("inventoryLocation"),
+                        },
+                      ]
+                    : []
+                }
+                placeholder="Select Location "
+                style={{ width: "200px" }}
+                separator={true}
+                onChange={(values) => {
+                  if (values[0]) {
+                    localStorage.setItem("inventoryLocation", values[0].value);
+                  }
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="subContainer" style={{ marginBottom: "30px" }}>
             <div className="subContainer2 flexRight">
               <div>Name</div>
             </div>
+
             <div className="subContainer2 flexLeft">
               <input
                 placeholder="Enter Name"

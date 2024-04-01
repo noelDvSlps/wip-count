@@ -1,6 +1,7 @@
 import { API_CONFIG } from "../config";
 
 export const createInventoryWip = ({
+  location,
   mohId,
   item,
   wipQty,
@@ -15,6 +16,7 @@ export const createInventoryWip = ({
     },
     method: "POST",
     body: JSON.stringify({
+      location,
       mohId,
       item,
       wipQty,
