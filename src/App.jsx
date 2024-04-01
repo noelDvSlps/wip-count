@@ -386,7 +386,7 @@ function App() {
           <div
             className="subContainer"
             style={{
-              marginTop: "60px",
+              marginTop: "20px",
               display: "flex",
               justifyContent: "center",
             }}
@@ -400,7 +400,7 @@ function App() {
           </div>
         </form>
       )}
-      <p ref={paraRef}></p>
+      <p ref={paraRef} style={{ margin: 0 }}></p>
     </div>
   );
 }
